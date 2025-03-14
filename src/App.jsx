@@ -62,11 +62,19 @@ const App = () => {
   };
 
   const loadTrendingMovies = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
       const movies = await getTrendingMovies();
       setTrendingMovies(movies);
     } catch (error) {
       console.error(`Error fetching trending movies: ${error}`);
+      setErrorMessage(
+        "Error fetching trending movies. Please try again later."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,7 +84,7 @@ const App = () => {
 
   useEffect(() => {
     loadTrendingMovies();
-  });
+  }, []);
 
   return (
     <main>
@@ -85,34 +93,46 @@ const App = () => {
       <div className="wrapper">
         <header>
           <img src="./hero.png" alt="Hero Image" />
-          <h1>
+          <h1 className="cursor-default">
             Find <span className="text-gradient">Movies</span> You'll Enjoy
             Without the Hassle
           </h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
-        {trendingMovies.length > 0 && (
-          <section className="trending">
-            <h2>Trending Movies</h2>
+        {isLoading ? (
+          <p className="text-white">
+            <Spinner />
+          </p>
+        ) : errorMessage ? (
+          <p className="text-red-500">{errorMessage}</p>
+        ) : (
+          trendingMovies.length > 0 && (
+            <section className="trending">
+              <h2>Trending Movies</h2>
 
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title} />
-                </li>
-              ))}
-            </ul>
-          </section>
+              <ul>
+                {trendingMovies.map((movie, index) => (
+                  <li key={movie.$id}>
+                    <p className="cursor-default">{index + 1}</p>
+                    <img
+                      className="cursor-pointer"
+                      src={movie.poster_url}
+                      alt={movie.title}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
         )}
 
         <section className="all-movies">
-          <h2>
+          <h2 className="cursor-default">
             {searchTerm
               ? `Search Results for "${searchTerm}"`
               : movieList.length === 0
-              ? `No Movies Found for "${searchTerm}"`
+              ? `No Movies Found`
               : "Popular Movies"}
           </h2>
 
