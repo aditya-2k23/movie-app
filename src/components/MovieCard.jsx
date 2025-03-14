@@ -24,7 +24,7 @@ const MovieCard = ({
           </div>
 
           <span>●</span>
-          <p className="lang">{original_language}</p>
+          <p className="lang">{original_language.toUpperCase()}</p>
           <span>●</span>
 
           <p className="year">
