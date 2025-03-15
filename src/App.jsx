@@ -5,6 +5,7 @@ import MovieCard from "./components/MovieCard";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
 import Navbar from "./components/Navbar";
+import { getTMDBTrendingMovies } from "./TMDb/fetchTrending";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -34,7 +35,7 @@ const App = () => {
     try {
       const endpoint = query
         ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+        : `${API_BASE_URL}/discover/movie?include_video=true&sort_by=popularity.desc`;
       const response = await fetch(endpoint, API_OPTIONS);
 
       if (!response.ok) {
@@ -68,6 +69,12 @@ const App = () => {
 
     try {
       const movies = await getTrendingMovies();
+      //   const movies = await getTMDBTrendingMovies();
+
+      if (!movies || movies.length === 0) {
+        throw new Error("No trending movies found");
+      }
+
       setTrendingMovies(movies);
     } catch (error) {
       console.error(`Error fetching trending movies: ${error}`);
@@ -104,9 +111,7 @@ const App = () => {
         </header>
 
         {isLoading ? (
-          <p className="text-white">
-            <Spinner />
-          </p>
+          <Spinner />
         ) : errorMessage ? (
           <p className="text-red-500">{errorMessage}</p>
         ) : (
@@ -116,7 +121,7 @@ const App = () => {
 
               <ul>
                 {trendingMovies.map((movie, index) => (
-                  <li key={movie.$id}>
+                  <li key={movie.id}>
                     <p className="cursor-default">{index + 1}</p>
                     <img
                       className="cursor-pointer"
@@ -140,9 +145,7 @@ const App = () => {
           </h2>
 
           {isLoading ? (
-            <p className="text-white">
-              <Spinner />
-            </p>
+            <Spinner />
           ) : errorMessage ? (
             <p className="text-red-500">{errorMessage}</p>
           ) : (
