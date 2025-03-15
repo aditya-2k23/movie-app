@@ -88,7 +88,7 @@ const App = () => {
   }, []);
 
   return (
-    <main>
+    <main className="overflow-hidden">
       <div className="pattern" />
 
       <div className="wrapper">
