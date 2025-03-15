@@ -5,7 +5,7 @@ import MovieCard from "./components/MovieCard";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
 import Navbar from "./components/Navbar";
-import { getTMDBTrendingMovies } from "./TMDb/fetchTrending";
+// import { getTMDBTrendingMovies } from "./TMDb/fetchTrending";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -114,7 +114,7 @@ const App = () => {
           <Spinner />
         ) : errorMessage ? (
           <p className="text-red-500">{errorMessage}</p>
-        ) : (
+        ) : !searchTerm ? (
           trendingMovies.length > 0 && (
             <section className="trending">
               <h2>Trending Movies</h2>
@@ -133,10 +133,12 @@ const App = () => {
               </ul>
             </section>
           )
+        ) : (
+          <></>
         )}
 
         <section className="all-movies">
-          <h2 className="cursor-default">
+          <h2 className="cursor-default mt-10">
             {searchTerm
               ? `Search Results for "${searchTerm}"`
               : movieList.length === 0
