@@ -4,6 +4,7 @@ import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
+import Navbar from "./components/Navbar";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -91,6 +92,8 @@ const App = () => {
       <div className="pattern" />
 
       <div className="wrapper">
+        <Navbar />
+
         <header>
           <img src="./hero.png" alt="Hero Image" />
           <h1 className="cursor-default">
