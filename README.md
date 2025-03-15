@@ -1,6 +1,6 @@
 # Movie App
 
-This project is a movie application built with React and Vite. It allows users to search for movies, view trending movies, and get detailed information about each movie. The application uses the TMDb API for fetching movie data and Appwrite for managing search counts.
+This project is a movie application (Mavora) built with React and Vite. It allows users to search for movies, view trending movies, and get detailed information about each movie. The application uses the TMDb API for fetching movie data and Appwrite for managing search counts.
 
 ## Features
 
