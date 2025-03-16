@@ -6,6 +6,7 @@ import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
 import Navbar from "./components/Navbar";
 // import { getTMDBTrendingMovies } from "./TMDb/fetchTrending";
+import LoadMoreButton from "./components/LoadMoreButton"; // Import the new component
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -28,38 +29,63 @@ const App = () => {
 
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 750, [searchTerm]);
 
-  const fetchMovies = async (query = "") => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchMovies = async (query = "", page = 1) => {
     setIsLoading(true);
     setErrorMessage("");
 
     try {
       const endpoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${API_BASE_URL}/discover/movie?include_video=true&sort_by=popularity.desc`;
-      const response = await fetch(endpoint, API_OPTIONS);
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(
+            query
+          )}&page=${page}`
+        : `${API_BASE_URL}/discover/movie?include_video=true&sort_by=popularity.desc&page=${page}`;
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch movies");
-      }
+      console.log(`Fetching: ${endpoint}`);
+
+      const response = await fetch(endpoint, API_OPTIONS);
+      if (!response.ok) throw new Error(`Failed to fetch movies`);
 
       const data = await response.json();
+      console.log("API Response:", data);
 
-      if (data.Response === "False") {
-        setErrorMessage(data.Error || "Failed to fetch movies");
+      if (!data.results || data.results.length === 0) {
+        setErrorMessage(data.Error || "No movies found.");
         setMovieList([]);
         return;
       }
 
-      setMovieList(data.results || []);
+      setMovieList((prevMovies) =>
+        page === 1 ? data.results : [...prevMovies, ...data.results]
+      );
 
       if (query && data.results.length > 0) {
         await updateSearchCount(query, data.results[0]);
       }
+
+      setTotalPages(data.total_pages || 1);
     } catch (error) {
       console.error(`Error fetching movies: ${error}`);
       setErrorMessage("Error fetching movies. Please try again later.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Call fetchMovies with the first page on search
+  useEffect(() => {
+    setMovieList([]); // Clear previous results
+    setCurrentPage(1);
+    fetchMovies(debouncedSearchTerm, 1);
+  }, [debouncedSearchTerm]);
+
+  const handleLoadMore = () => {
+    if (currentPage < totalPages) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      fetchMovies(debouncedSearchTerm, nextPage);
     }
   };
 
@@ -85,10 +111,6 @@ const App = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchMovies(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     loadTrendingMovies();
@@ -158,6 +180,12 @@ const App = () => {
             </ul>
           )}
         </section>
+
+        <LoadMoreButton
+          onClick={handleLoadMore}
+          isLoading={isLoading}
+          hasMore={currentPage < totalPages}
+        />
       </div>
     </main>
   );
