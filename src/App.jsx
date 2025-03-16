@@ -121,8 +121,8 @@ const App = () => {
         <header>
           <img src="./hero.png" alt="Hero Image" />
           <h1 className="cursor-default">
-            Find <span className="text-gradient">Movies</span> You'll Enjoy
-            Without the Hassle
+            Love <span className="text-gradient">Movies?</span> Find Your Next
+            Favorite Effortlessly!
           </h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
