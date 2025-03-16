@@ -43,13 +43,10 @@ const App = () => {
           )}&page=${page}`
         : `${API_BASE_URL}/discover/movie?include_video=true&sort_by=popularity.desc&page=${page}`;
 
-      console.log(`Fetching: ${endpoint}`);
-
       const response = await fetch(endpoint, API_OPTIONS);
       if (!response.ok) throw new Error(`Failed to fetch movies`);
 
       const data = await response.json();
-      console.log("API Response:", data);
 
       if (!data.results || data.results.length === 0) {
         setErrorMessage(data.Error || "No movies found.");
@@ -61,11 +58,10 @@ const App = () => {
         page === 1 ? data.results : [...prevMovies, ...data.results]
       );
 
-      if (query && data.results.length > 0) {
+      if (query && data.results.length > 0)
         await updateSearchCount(query, data.results[0]);
-      }
 
-      setTotalPages(data.total_pages || 1);
+      if (page === 1) setTotalPages(data.total_pages || 1);
     } catch (error) {
       console.error(`Error fetching movies: ${error}`);
       setErrorMessage("Error fetching movies. Please try again later.");
@@ -74,9 +70,8 @@ const App = () => {
     }
   };
 
-  // Call fetchMovies with the first page on search
   useEffect(() => {
-    setMovieList([]); // Clear previous results
+    setMovieList([]);
     setCurrentPage(1);
     fetchMovies(debouncedSearchTerm, 1);
   }, [debouncedSearchTerm]);
