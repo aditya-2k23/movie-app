@@ -8,6 +8,8 @@ import Navbar from "./components/Navbar";
 // import { getTMDBTrendingMovies } from "./TMDb/fetchTrending";
 import LoadMoreButton from "./components/LoadMoreButton"; // Import the new component
 import MovieModal from "./components/MovieModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartLine, faFire } from "@fortawesome/free-solid-svg-icons";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -138,9 +140,18 @@ const App = () => {
         ) : !searchTerm ? (
           trendingMovies.length > 0 && (
             <section className="trending">
-              <h2>Trending Movies</h2>
+              <div className="flex gap-3 items-center mb-2">
+                <FontAwesomeIcon
+                  icon={faFire}
+                  className="text-secondary text-3xl"
+                />
+                <h2 className="cursor-default">Top 5 Movies Trending</h2>
+                <p className="text-xs text-gray-400 cursor-default mt-2">
+                  (Based on the number of searches)
+                </p>
+              </div>
 
-              <ul>
+              <ul className="overflow-y-clip">
                 {trendingMovies.map((movie, index) => (
                   <li key={movie.id}>
                     <p className="cursor-default">{index + 1}</p>
@@ -159,12 +170,20 @@ const App = () => {
         )}
 
         <section className="all-movies">
-          <h2 className="cursor-default mt-10">
-            {searchTerm
-              ? `Search Results for "${searchTerm}"`
-              : movieList.length === 0
-              ? `No Movies Found`
-              : "Popular Movies"}
+          <h2 className="cursor-default mt-1">
+            {searchTerm ? (
+              `Search Results for "${searchTerm}"`
+            ) : movieList.length === 0 ? (
+              `No Movies Found`
+            ) : (
+              <span className="flex gap-3 items-center">
+                <FontAwesomeIcon
+                  icon={faChartLine}
+                  className="text-secondary"
+                />
+                Popular Movies
+              </span>
+            )}
           </h2>
 
           {isLoading ? (
