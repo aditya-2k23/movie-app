@@ -7,6 +7,7 @@ import { getTrendingMovies, updateSearchCount } from "./appwrite";
 import Navbar from "./components/Navbar";
 // import { getTMDBTrendingMovies } from "./TMDb/fetchTrending";
 import LoadMoreButton from "./components/LoadMoreButton"; // Import the new component
+import MovieModal from "./components/MovieModal";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -31,6 +32,9 @@ const App = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const closeModal = () => setSelectedMovie(null);
 
   const fetchMovies = async (query = "", page = 1) => {
     setIsLoading(true);
@@ -168,11 +172,21 @@ const App = () => {
           ) : errorMessage ? (
             <p className="text-red-500">{errorMessage}</p>
           ) : (
-            <ul>
-              {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </ul>
+            <>
+              <ul>
+                {movieList.map((movie) => (
+                  <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    onClick={() => setSelectedMovie(movie)}
+                  />
+                ))}
+              </ul>
+
+              {selectedMovie && (
+                <MovieModal movie={selectedMovie} onClose={closeModal} />
+              )}
+            </>
           )}
         </section>
 
