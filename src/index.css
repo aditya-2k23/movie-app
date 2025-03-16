@@ -5,6 +5,7 @@
 
 @theme {
     --color-primary: #030014;
+    --color-secondary: #AB8BFF;
 
     --color-light-100: #cecefb;
     --color-light-200: #a8b5db;
@@ -144,6 +145,18 @@
 
         & .content .year {
             @apply text-gray-200 font-medium text-base;
+        }
+    }
+
+    .modal-content {
+        @apply flex flex-row pt-5 justify-center gap-4;
+
+        & h3 {
+            @apply text-light-200 font-medium text-base;
+        }
+
+        & p {
+            @apply text-gray-300 text-base;
         }
     }
 }
