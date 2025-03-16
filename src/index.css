@@ -103,7 +103,7 @@
         @apply space-y-9;
 
         & ul {
-            @apply grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+            @apply grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5;
         }
     }
 
@@ -111,7 +111,7 @@
         @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10;
 
         & img {
-            @apply rounded-lg h-auto w-full;
+            @apply rounded-lg md:h-96 xl:h-72 object-cover;
         }
 
         & h3 {
@@ -119,11 +119,11 @@
         }
 
         & .content {
-            @apply mt-2 flex flex-row items-center flex-wrap gap-2;
+            @apply mt-1 flex flex-row items-center flex-wrap gap-2;
         }
 
         & .rating {
-            @apply flex flex-row items-center gap-1;
+            @apply flex flex-row items-center gap-2;
         }
 
         & .rating img {
@@ -139,11 +139,11 @@
         }
 
         & .content .lang {
-            @apply capitalize text-gray-100 font-medium text-base;
+            @apply capitalize text-gray-200 font-medium text-base;
         }
 
         & .content .year {
-            @apply text-gray-100 font-medium text-base;
+            @apply text-gray-200 font-medium text-base;
         }
     }
 }
